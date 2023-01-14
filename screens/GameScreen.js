@@ -23,13 +23,12 @@ function generateRandomBetween(min, max, exclude) {
 // let minBoundry = minValue;
 // let maxBoundry = maxValue;
 
-
+let initialGuess = 0;
 
 function GameScreen({userNumber, onGameOver}) {
     const [minBoundry, setMinBoundry] = useState(1);
     const [maxBoundry, setMaxBoundry] = useState(100);
-    const initialGuess = generateRandomBetween(1, 100, userNumber);
-    const [currentGuess, setCurrentGuess] = useState(initialGuess);
+    const [currentGuess, setCurrentGuess] = useState(0);
     const [guessLog, setGuessLog] = useState([]);
 
     useEffect(() => {
@@ -39,6 +38,13 @@ function GameScreen({userNumber, onGameOver}) {
             onGameOver(guessLog);
         }
     }, [userNumber, currentGuess]);
+
+
+    useEffect(() => {
+       initialGuess =  generateRandomBetween(1, 100, userNumber);
+       setCurrentGuess(initialGuess);
+       console.log(`Initial guess: ${initialGuess}`);
+    }, []);
 
     function nextGuessHandler(direction) {
         let min = minBoundry;
@@ -57,8 +63,8 @@ function GameScreen({userNumber, onGameOver}) {
             max = currentGuess
             setMaxBoundry(max);
         } else {
-            console.log(`v Set Min Boundry to ${currentGuess}`)
-            min = currentGuess;
+            console.log(`v Set Min Boundry to ${currentGuess + 1}`)
+            min = currentGuess + 1;
             setMinBoundry(min);
         }
         console.log(`Generate: min:${min} max: ${max} exclude: ${currentGuess}`);
