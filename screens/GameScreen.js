@@ -1,10 +1,11 @@
 import {useState, useEffect} from "react";
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, FlatList, Text} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import Title from '../components/ui/Title'
 import NumberContainer from "../components/game/NumberContainer";
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Card from "../components/ui/Card";
+import Colors from "../constants/colors"
 
 function generateRandomBetween(min, max, exclude) {
     const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -41,9 +42,9 @@ function GameScreen({userNumber, onGameOver}) {
 
 
     useEffect(() => {
-       initialGuess =  generateRandomBetween(1, 100, userNumber);
-       setCurrentGuess(initialGuess);
-       console.log(`Initial guess: ${initialGuess}`);
+        initialGuess = generateRandomBetween(1, 100, userNumber);
+        setCurrentGuess(initialGuess);
+        console.log(`Initial guess: ${initialGuess}`);
     }, []);
 
     function nextGuessHandler(direction) {
@@ -72,7 +73,7 @@ function GameScreen({userNumber, onGameOver}) {
         setCurrentGuess(newRndNumber);
         const newGuessLog = [...guessLog, newRndNumber];
         console.log(`New log: ${newGuessLog}`);
-        setGuessLog([...guessLog, newRndNumber]);
+        setGuessLog(prevGuessLog => [...prevGuessLog, newRndNumber]);
     }
 
     return (
@@ -89,7 +90,16 @@ function GameScreen({userNumber, onGameOver}) {
                     </PrimaryButton>
                 </View>
             </Card>
-            {/*<View>LOG ROUNDS</View>*/}
+            <Card title='Guesses' style={styles.card}>
+                    <FlatList
+                        data={guessLog}
+                        renderItem={({item}) => {
+                            return (
+                                <Text style={styles.guessText}>{item}</Text>
+                            )
+                        }}
+                    />
+            </Card>
         </View>
     )
 }
@@ -111,8 +121,14 @@ const styles = StyleSheet.create({
     },
     card: {
         marginHorizontal: 40,
+        marginBottom: 20,
+        maxHeight: 250,
     },
     title: {
         marginHorizontal: 30,
     },
+    guessText: {
+        fontFamily: 'open-sans',
+        color: Colors.accent500,
+    }
 });
