@@ -2,13 +2,16 @@ import {useState, useEffect} from 'react';
 import {StyleSheet, ImageBackground, SafeAreaView} from 'react-native';
 import {LinearGradient} from "expo-linear-gradient";
 import {useFonts} from "expo-font";
-import AppLoading from "expo-app-loading";
+import * as SplashScreen from 'expo-splash-screen';
 
 import StartGameScreen from "./screens/StartGameScreen";
 import GameScreen from "./screens/GameScreen";
 import GameOverScreen from "./screens/GameOverScreen";
 import {StatusBar} from "expo-status-bar";
 import Colors from "./constants/colors"
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
     const [userNumber, setUserNumber] = useState();
@@ -34,8 +37,11 @@ export default function App() {
     },[userNumber, gameOver]);
 
     if (!fontsLoaded) {
-        return <AppLoading/>
+        return null;
+    } else {
+        SplashScreen.hideAsync();
     }
+
 
     function pickedNumberHandler(pickedNumber) {
         setUserNumber(pickedNumber);
