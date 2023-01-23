@@ -1,7 +1,6 @@
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, TextInput} from 'react-native';
 import {useState} from 'react';
 import PrimaryButton from "../components/ui/PrimaryButton";
-import GameInput from "../components/game/GameInput";
 import Colors from "../constants/colors";
 import Title from "../components/ui/Title";
 import Card from "../components/ui/Card";
@@ -9,9 +8,9 @@ import Card from "../components/ui/Card";
 function StartGameScren({onPickNumber}) {
     const [enteredNumber, setEnteredNumber] = useState('');
 
-    function handleNumberInput(enteredNumber) {
-        setEnteredNumber(enteredNumber);
-    }
+  function numberInputHandler(enteredText) {
+    setEnteredNumber(enteredText);
+  }
 
     function resetInputHandler() {
         setEnteredNumber('');
@@ -31,12 +30,15 @@ function StartGameScren({onPickNumber}) {
         <View style={styles.rootContainer}>
             <Title>Guess My Number</Title>
             <Card title='Enter a Number' style={styles.card}>
-                <View style={styles.textContainer}>
-                    <GameInput
-                        numberInputHandler={handleNumberInput}
-                        text={enteredNumber}
-                    />
-                </View>
+                <TextInput
+                    style={styles.numberInput}
+                    maxLength={2}
+                    keyboardType="number-pad"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onChangeText={numberInputHandler}
+                    value={enteredNumber}
+                />
                 <View style={styles.buttonsContainer}>
                     <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
                     <PrimaryButton onPress={confirmInputHandler}>Confirm</PrimaryButton>
@@ -55,8 +57,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 50,
     },
-    textContainer: {
-        alignItems: 'center',
+    numberInput: {
+        height: 50,
+        width: 50,
+        fontSize: 32,
+        borderBottomColor: Colors.accent500,
+        borderBottomWidth: 2,
+        color: Colors.accent500,
+        marginVertical: 8,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     buttonsContainer: {
         flexDirection: 'row',

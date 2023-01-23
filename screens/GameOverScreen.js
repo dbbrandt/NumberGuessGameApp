@@ -19,12 +19,12 @@ function GameOverScreen({userNumber, guessLog, handleNewGame}) {
                         rounds to guess the number
                         <Text style={styles.resultsBold}> {userNumber} </Text>.
                     </Text>
-                    <Text style={styles.results}>Guesses:</Text>
-                    <View style={styles.guessList}>
-                        {guessLog.map((log, index) => {
-                            return <Text key={index} style={styles.guessText}>{index + 1}) {log}</Text>
-                        })}
-                    </View>
+                    {/*<Text style={styles.results}>Guesses:</Text>*/}
+                    {/*<View style={styles.guessList}>*/}
+                    {/*    {guessLog.map((log, index) => {*/}
+                    {/*        return <Text key={index} style={styles.guessText}>{index + 1}) {log}</Text>*/}
+                    {/*    })}*/}
+                    {/*</View>*/}
                 </View>
                 <PrimaryButton style={styles.button} onPress={handleNewGame}>
                     Start new game
@@ -40,17 +40,17 @@ const styles = StyleSheet.create({
     rootContainer: {
         flex: 1,
         padding: 24,
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     imageContainer: {
         width: 300,
         height: 300,
-        borderRadius: 200,
+        borderRadius: 150,
         borderWidth: 3,
         borderColor: Colors.primary800,
         overflow: 'hidden',
-        margin: 36,
+        margin: 30,
     },
     image: {
         width: '100%',

@@ -32,6 +32,5 @@ const styles = StyleSheet.create({
         fontFamily: 'open-sans',
         fontSize: 20,
         color: Colors.accent500,
-        paddingBottom: 10,
     },
 });
