@@ -1,8 +1,10 @@
-import {View, Text, Image, StyleSheet} from "react-native";
+import {View, Text, Image, StyleSheet, Dimensions} from "react-native";
 import Title from "../components/ui/Title";
 import Colors from "../constants/colors";
 import Card from "../components/ui/Card";
 import PrimaryButton from "../components/ui/PrimaryButton";
+
+const deviceHeight = Dimensions.get('window').height;
 
 function GameOverScreen({userNumber, guessLog, handleNewGame}) {
     console.log(`GameOver GuessLog: ${guessLog}`);
@@ -12,19 +14,23 @@ function GameOverScreen({userNumber, guessLog, handleNewGame}) {
             <View style={styles.imageContainer}>
                 <Image style={styles.image} source={require('../assets/images/success.png')}/>
             </View>
-            <Card title='Game Results' style={styles.card}>
+            <Card title={deviceHeight < 600 ? '' : 'Game Results'} style={styles.card}>
                 <View style={styles.resultsContainer}>
-                    <Text style={styles.results}>You phone needed
+                    <Text style={styles.results}>Your phone needed
                         <Text style={styles.resultsBold}> {guessLog.length} </Text>
                         rounds to guess the number
                         <Text style={styles.resultsBold}> {userNumber} </Text>.
                     </Text>
-                    {/*<Text style={styles.results}>Guesses:</Text>*/}
-                    {/*<View style={styles.guessList}>*/}
-                    {/*    {guessLog.map((log, index) => {*/}
-                    {/*        return <Text key={index} style={styles.guessText}>{index + 1}) {log}</Text>*/}
-                    {/*    })}*/}
-                    {/*</View>*/}
+                    {deviceHeight > 800 &&
+                    <>
+                        <Text style={styles.results}>Guesses:</Text>
+                        <View style={styles.guessList}>
+                            {guessLog.map((log, index) => {
+                                return <Text key={index} style={styles.guessText}>{index + 1}) {log}</Text>
+                            })}
+                        </View>
+                    </>
+                    }
                 </View>
                 <PrimaryButton style={styles.button} onPress={handleNewGame}>
                     Start new game

@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {View, StyleSheet, Alert, FlatList, Text} from 'react-native';
+import {View, StyleSheet, Alert, FlatList, Text, Dimensions} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import Title from '../components/ui/Title'
 import NumberContainer from "../components/game/NumberContainer";
@@ -78,8 +78,11 @@ function GameScreen({userNumber, onGameOver}) {
 
     return (
         <View style={styles.screen}>
-            <Title style={styles.title}>Opponent's Guess</Title>
-            <NumberContainer style={styles.numberContainer}>{currentGuess}</NumberContainer>
+            <View style={styles.guessContainer}>
+                <Title style={styles.title}>Opponent's Guess</Title>
+                <NumberContainer style={styles.numberContainer}>{currentGuess}</NumberContainer>
+            </View>
+
             <Card title='Higher or Lower' style={styles.card}>
                 <View style={styles.buttonsContainer}>
                     <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
@@ -90,21 +93,28 @@ function GameScreen({userNumber, onGameOver}) {
                     </PrimaryButton>
                 </View>
             </Card>
-            <Card title='Guesses' style={styles.card}>
-                    <FlatList
-                        data={guessLog}
-                        renderItem={({item}) => {
-                            return (
-                                <Text style={styles.guessText}>{item}</Text>
-                            )
-                        }}
-                    />
-            </Card>
+            {guessLog.length > 0 &&
+
+            <View style={styles.cardGuess}>
+                <FlatList
+                    data={guessLog}
+                    renderItem={({item, index}) => {
+                        return (
+                            <View style={styles.guessList}>
+                                <Text style={styles.guessText}>{index +1} - {item}</Text>
+                            </View>
+                        )
+                    }}
+                />
+            </View>
+            }
         </View>
     )
 }
 
 export default GameScreen;
+
+const deviceWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     screen: {
@@ -115,20 +125,44 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         flexDirection: 'row',
     },
+    guessContainer: {
+        alignItems: 'center',
+        marginVertical: 50,
+    },
     numberContainer: {
-        margin: 50,
-        marginHorizontal: 80,
+        marginTop: 50,
     },
     card: {
         marginHorizontal: 40,
         marginBottom: 20,
-        maxHeight: 250,
+    },
+    cardGuess: {
+        marginHorizontal: 40,
+        marginBottom: 20,
+        maxHeight: deviceWidth < 400 ? 120 : 300,
     },
     title: {
         marginHorizontal: 30,
     },
     guessText: {
-        fontFamily: 'open-sans',
-        color: Colors.accent500,
-    }
+        fontFamily: 'open-sans-bold',
+        color: Colors.primary800,
+        paddingHorizontal: 5,
+        marginTop: 5,
+        textAlign: 'center',
+    },
+    guessList: {
+        borderColor: Colors.primary800,
+        borderWidth: 1,
+        borderRadius: 15,
+        paddingVertical: deviceWidth < 400 ? 2 : 6,
+        marginVertical: 2,
+        backgroundColor: Colors.accent500,
+        elevation: 4,
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 0},
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+        width: '100%',
+    },
 });

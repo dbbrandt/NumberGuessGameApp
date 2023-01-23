@@ -4,7 +4,9 @@ import Colors from "../../constants/colors";
 function Card({title, style, children}) {
     return (
         <View style={[styles.card, style]}>
-            <Text style={styles.titleText}>{title}</Text>
+            {title &&
+                <Text style={styles.titleText}>{title}</Text>
+            }
             {children}
         </View>
     )
@@ -16,7 +18,7 @@ const styles = StyleSheet.create({
     card: {
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 16,
+        padding: 10,
         backgroundColor: Colors.primary800,
         borderRadius: 8,
         elevation: 4,
