@@ -1,48 +1,59 @@
-import {View, Text, Image, StyleSheet, Dimensions} from "react-native";
+import {View, Text, Image, StyleSheet, Dimensions, ScrollView, useWindowDimensions} from "react-native";
 import Title from "../components/ui/Title";
 import Colors from "../constants/colors";
 import Card from "../components/ui/Card";
 import PrimaryButton from "../components/ui/PrimaryButton";
 
-const deviceHeight = Dimensions.get('window').height;
-
 function GameOverScreen({userNumber, guessLog, handleNewGame}) {
-    console.log(`GameOver GuessLog: ${guessLog}`);
+    const {width, height} = useWindowDimensions();
+
+    const imageSizing = {
+        width: (height > 500 && width > 400) ? 300 : 150,
+        height: (height > 500 && width > 400) ? 300 : 150,
+        borderRadius: (height > 500 && width > 400) ? 150 : 75
+    }
+
     return (
-        <View style={styles.rootContainer}>
-            <Title style={styles.title}>Game Over!</Title>
-            <View style={styles.imageContainer}>
-                <Image style={styles.image} source={require('../assets/images/success.png')}/>
-            </View>
-            <Card title={deviceHeight < 600 ? '' : 'Game Results'} style={styles.card}>
-                <View style={styles.resultsContainer}>
-                    <Text style={styles.results}>Your phone needed
-                        <Text style={styles.resultsBold}> {guessLog.length} </Text>
-                        rounds to guess the number
-                        <Text style={styles.resultsBold}> {userNumber} </Text>.
-                    </Text>
-                    {deviceHeight > 800 &&
-                    <>
-                        <Text style={styles.results}>Guesses:</Text>
-                        <View style={styles.guessList}>
-                            {guessLog.map((log, index) => {
-                                return <Text key={index} style={styles.guessText}>{index + 1}) {log}</Text>
-                            })}
-                        </View>
-                    </>
-                    }
+        <ScrollView style={styles.screen}>
+            <View style={styles.rootContainer}>
+                <Title style={styles.title}>Game Over!</Title>
+                <View style={[styles.imageContainer, imageSizing]}>
+                    <Image style={styles.image} source={require('../assets/images/success.png')}/>
                 </View>
-                <PrimaryButton style={styles.button} onPress={handleNewGame}>
-                    Start new game
-                </PrimaryButton>
-            </Card>
-        </View>
+                <Card title={height > 500 ? 'Game Results' : ''} style={styles.card}>
+                    <View style={styles.resultsContainer}>
+                        <Text style={styles.results}>Your phone needed
+                            <Text style={styles.resultsBold}> {guessLog.length} </Text>
+                            rounds to guess the number
+                            <Text style={styles.resultsBold}> {userNumber} </Text>.
+                        </Text>
+                        {height > 500 &&
+                        <>
+                            <Text style={styles.results}>Guesses:</Text>
+
+                            <View style={styles.guessList}>
+                                {guessLog.map((log, index) => {
+                                    return <Text key={index} style={styles.guessText}>{index + 1}) {log}</Text>
+                                })}
+                            </View>
+                        </>
+                        }
+                    </View>
+                    <PrimaryButton style={styles.button} onPress={handleNewGame}>
+                        Start new game
+                    </PrimaryButton>
+                </Card>
+            </View>
+        </ScrollView>
     )
 }
 
 export default GameOverScreen;
 
 const styles = StyleSheet.create({
+    screen: {
+        flex: 1,
+    },
     rootContainer: {
         flex: 1,
         padding: 24,
@@ -50,9 +61,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     imageContainer: {
-        width: 300,
-        height: 300,
-        borderRadius: 150,
         borderWidth: 3,
         borderColor: Colors.primary800,
         overflow: 'hidden',

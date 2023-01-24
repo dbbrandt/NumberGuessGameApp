@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 4,
     borderColor: Colors.accent500,
-    padding: deviceWidth < 400 ? 10 : 24,
+    padding: deviceWidth > 500 ? 24 : 10,
     margin: 24,
     borderRadius: 8,
     alignItems: 'center',

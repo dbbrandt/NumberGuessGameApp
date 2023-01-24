@@ -34,7 +34,7 @@ export default function App() {
         } else {
             setScreen(<StartGameScreen onPickNumber={pickedNumberHandler}/>);
         }
-    },[userNumber, gameOver]);
+    }, [userNumber, gameOver]);
 
     if (!fontsLoaded) {
         return null;
@@ -61,21 +61,23 @@ export default function App() {
 
 
     return (
-        <LinearGradient
-            colors={[Colors.primary700, Colors.accent500]}
-            style={styles.rootScreen}
-        >
-            <StatusBar style='auto'/>
-            <ImageBackground source={require('./assets/images/background.png')}
-                             resizeMode="cover"
-                             style={styles.rootScreen}
-                             imageStyle={styles.backgroundImage}
+        <>
+            <StatusBar style='light' hidden={false}/>
+            <LinearGradient
+                colors={[Colors.primary700, Colors.accent500]}
+                style={styles.rootScreen}
             >
-                <SafeAreaView style={styles.rootScreen}>
-                    {screen}
-                </SafeAreaView>
-            </ImageBackground>
-        </LinearGradient>
+                <ImageBackground source={require('./assets/images/background.png')}
+                                 resizeMode="cover"
+                                 style={styles.rootScreen}
+                                 imageStyle={styles.backgroundImage}
+                >
+                    <SafeAreaView style={styles.rootScreen}>
+                        {screen}
+                    </SafeAreaView>
+                </ImageBackground>
+            </LinearGradient>
+        </>
     )
 
 }

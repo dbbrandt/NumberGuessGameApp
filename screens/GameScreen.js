@@ -1,5 +1,8 @@
 import {useState, useEffect} from "react";
-import {View, StyleSheet, Alert, FlatList, Text, Dimensions} from 'react-native';
+import {
+    View, StyleSheet, Alert, FlatList, Text, Dimensions, ScrollView,
+    useWindowDimensions
+} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import Title from '../components/ui/Title'
 import NumberContainer from "../components/game/NumberContainer";
@@ -9,8 +12,6 @@ import Colors from "../constants/colors"
 
 function generateRandomBetween(min, max, exclude) {
     const rndNum = Math.floor(Math.random() * (max - min)) + min;
-    console.log(`Generate: min: ${min} max: ${max} exclude: ${exclude} rndNum: ${rndNum}`);
-
     if (rndNum === exclude) {
         return generateRandomBetween(min, max, exclude);
     } else {
@@ -31,6 +32,7 @@ function GameScreen({userNumber, onGameOver}) {
     const [maxBoundry, setMaxBoundry] = useState(100);
     const [currentGuess, setCurrentGuess] = useState(0);
     const [guessLog, setGuessLog] = useState([]);
+    const {width, height} = useWindowDimensions();
 
     useEffect(() => {
         console.log(`useEffect: CurrentGuess: ${currentGuess} - userNumber: ${userNumber} - GuessCount = ${guessLog.length}`);
@@ -76,38 +78,63 @@ function GameScreen({userNumber, onGameOver}) {
         setGuessLog(prevGuessLog => [...prevGuessLog, newRndNumber]);
     }
 
-    return (
-        <View style={styles.screen}>
+    function shortScreenBody() {
+        return (
             <View style={styles.guessContainer}>
                 <Title style={styles.title}>Opponent's Guess</Title>
-                <NumberContainer style={styles.numberContainer}>{currentGuess}</NumberContainer>
-            </View>
-
-            <Card title='Higher or Lower' style={styles.card}>
-                <View style={styles.buttonsContainer}>
+                <View style={styles.shortGuessContainer}>
                     <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
                         <Ionicons name='md-remove' size={24} color='white'/>
                     </PrimaryButton>
+                    <NumberContainer style={styles.numberContainer}>{currentGuess}</NumberContainer>
                     <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
                         <Ionicons name='md-add' size={24} color='white'/>
                     </PrimaryButton>
                 </View>
-            </Card>
-            {guessLog.length > 0 &&
-
-            <View style={styles.cardGuess}>
-                <FlatList
-                    data={guessLog}
-                    renderItem={({item, index}) => {
-                        return (
-                            <View style={styles.guessList}>
-                                <Text style={styles.guessText}>{index +1} - {item}</Text>
-                            </View>
-                        )
-                    }}
-                />
             </View>
-            }
+        )
+    }
+
+    function tallScreenBody() {
+        return (
+            <>
+                <View style={styles.guessContainer}>
+                    <Title style={styles.title}>Opponent's Guess</Title>
+                    <NumberContainer style={styles.numberContainer}>{currentGuess}</NumberContainer>
+                </View>
+                <Card title='Higher or Lower' style={styles.card}>
+                    <View style={styles.buttonsContainer}>
+                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+                            <Ionicons name='md-remove' size={24} color='white'/>
+                        </PrimaryButton>
+                        <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
+                            <Ionicons name='md-add' size={24} color='white'/>
+                        </PrimaryButton>
+                    </View>
+                </Card>
+                {guessLog.length > 0 &&
+
+                <View style={styles.cardGuess}>
+                    <FlatList
+                        data={guessLog}
+                        renderItem={({item, index}) => {
+                            return (
+                                <View style={styles.guessList}>
+                                    <Text style={styles.guessText}>{index + 1} - {item}</Text>
+                                </View>
+                            )
+                        }}
+                    />
+                </View>
+                }
+            </>
+        )
+    }
+
+    const screen = height > 400 ? tallScreenBody() : shortScreenBody();
+    return (
+        <View style={styles.rootContainer}>
+            {screen}
         </View>
     )
 }
@@ -119,6 +146,9 @@ const deviceWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
+    },
+    rootContainer: {
+        flex: 1,
         marginTop: 20,
         padding: 20,
     },
@@ -128,6 +158,11 @@ const styles = StyleSheet.create({
     guessContainer: {
         alignItems: 'center',
         marginVertical: 50,
+    },
+    shortGuessContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     numberContainer: {
         marginTop: 50,
@@ -139,7 +174,7 @@ const styles = StyleSheet.create({
     cardGuess: {
         marginHorizontal: 40,
         marginBottom: 20,
-        maxHeight: deviceWidth < 400 ? 120 : 300,
+        maxHeight: deviceWidth > 500 ? 300 : 120,
     },
     title: {
         marginHorizontal: 30,
@@ -155,7 +190,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.primary800,
         borderWidth: 1,
         borderRadius: 15,
-        paddingVertical: deviceWidth < 400 ? 2 : 6,
+        paddingVertical: deviceWidth > 500 ? 6 : 2,
         marginVertical: 2,
         backgroundColor: Colors.accent500,
         elevation: 4,
